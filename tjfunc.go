@@ -20,7 +20,7 @@ type CostRecord struct {
 	Amount int64
 }
 
-func SendSlackMessage(ctx context.Context, client *spanner.Client) {
+func SendSlackMessage(ctx context.Context, client *spanner.Client, slackWebhookURL string) {
 	// now := time.Now()
 
 	runningTotalCost := GetRunningTotalCostToDate(ctx, client)
@@ -44,7 +44,6 @@ func SendSlackMessage(ctx context.Context, client *spanner.Client) {
 	fmt.Println(output.String())
 
 	// Send the message to Slack
-	slackWebhookURL := "https://hooks.slack.com/services/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"
 	payload := map[string]string{"text": output.String()}
 	payloadBytes, _ := json.Marshal(payload)
 	resp, err := http.Post(slackWebhookURL, "application/json", bytes.NewBuffer(payloadBytes))
